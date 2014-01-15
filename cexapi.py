@@ -56,11 +56,11 @@ class CexApi:
 
   def place_buy_order(self, amount, price):
     return self.req("place_order/GHS/BTC/", True,
-      {'type': 'buy', 'amount': amount, 'price': price})
+      {'type': 'buy', 'amount': amount, 'price': round(price,8)})
 
   def place_sell_order(self, amount, price):
     return self.req("place_order/GHS/BTC/", True,
-      {'type': 'sell', 'amount': amount, 'price': price})
+      {'type': 'sell', 'amount': amount, 'price': round(price,8)})
 
   def get_workers(self):
     return self.req("ghash.io/workers", True)
