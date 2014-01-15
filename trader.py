@@ -36,12 +36,12 @@ class Trader:
     self.last_tid = self.get_max_tid(data)
     return data
     
-  def watch(self, ghs, price, stop_loss, take_profit):
+  def watch(self, ghs, start_price, stop_loss, take_profit):
     self.last_tid = 0
     self.get_trade_data()  # initialize last_tid
     
-    max_val = 0
-    stop_price = price * (1-stop_loss)
+    max_price = 0
+    stop_price = start_price * (1-stop_loss)
     sell_price = stop_price * (1-0.001)
 
     while True:
@@ -52,25 +52,25 @@ class Trader:
         time.sleep(5)
         continue
         
-      val = self.get_mean_value(data)
-      diff = val - price
-      gain = val/price
-      max_val = max(val, max_val)
-      drop_size = max_val * take_profit
-      drop = max_val - val
+      price = self.get_mean_value(data)
+      max_price = max(price, max_price)
+      max_drop = max_price * take_profit
+      drop = max_price - price
+      diff = price - start_price
+      gain = price / start_price
       
-      print "[%s] val: %0.8f (%0.08f), drop: %0.8f (%0.8f), max: %0.8f, gain: %0.8f, diff: %0.8f" \
-        % (get_ts(), val, stop_price, drop, drop_size, max_val, gain, diff)
+      print "[%s] price: %0.8f (%0.8f), drop: %0.8f (%0.8f), max: %0.8f, diff: %0.8f, gain: %0.8f" \
+        % (get_ts(), price, stop_price, drop, max_drop, max_price, diff, gain)
 
-      if val <= stop_price:
-        if self.sell(ghs, sell_price, "Stop loss!"): break
-      if drop >= drop_size:
-        if self.sell(ghs, sell_price, "Sell at top!"): break
+      if price <= stop_price:
+        if self.sell(ghs, sell_price, "Stop loss"): break
+      if drop >= max_drop:
+        if self.sell(ghs, sell_price, "Sell at top"): break
 
       time.sleep(20)
 
   def sell(self, amount, price, msg):
-    print msg
+    print "%s, sell price: %0.8f" % (msg, price)
     if config.debug_mode: return False
     result = self.api.place_sell_order(amount, price)
     print result
@@ -78,6 +78,7 @@ class Trader:
     
 #################################
 
+if config.debug_mode: print "Debug mode ON!"
 api = cexapi.CexApi(config.username, config.apikey, config.secret)
 trader = Trader(api)
 trader.watch(config.start_ghs, config.start_price, config.stop_loss, config.take_profit)
