@@ -1,20 +1,7 @@
 
 import cexapi
 import time
-
-#################################################################
-# data needed to access cex.io api
-username = ""
-apikey = ""
-secret = ""
-
-# settings about trade ------------------------------------------
-stop_loss = 0.001     # how match are you willing to loose?
-take_profit = 0.02    # level to escape when price suddenly drops
-start_ghs = 1.35      # how many ghs do you want to trade
-start_price = 0.04575 # price you paid for those ghashes
-
-#################################################################
+import config
 
 def log(msg):
   print msg
@@ -55,7 +42,7 @@ class Trader:
     
     max_val = 0
     stop_price = price * (1-stop_loss)
-    sell_price = stop_price * 0.999
+    sell_price = stop_price * (1-0.001)
 
     while True:
       try:
@@ -80,18 +67,19 @@ class Trader:
       if drop >= drop_size:
         if self.sell(ghs, sell_price, "Sell at top!"): break
 
-      time.sleep(15)
+      time.sleep(20)
 
   def sell(self, amount, price, msg):
     print msg
+    if config.debug_mode: return False
     result = self.api.place_sell_order(amount, price)
     print result
     return True
     
 #################################
 
-api = cexapi.CexApi(username, apikey, secret)
+api = cexapi.CexApi(config.username, config.apikey, config.secret)
 trader = Trader(api)
-trader.watch(start_ghs, start_price, stop_loss, take_profit)
+trader.watch(config.start_ghs, config.start_price, config.stop_loss, config.take_profit)
 
 
