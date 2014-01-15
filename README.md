@@ -4,7 +4,7 @@ Bot to ease the pain of speculation on CEX.io exchange.
 
 usage
 =====
-Buy some ghashes, set parameters at the beginning of trader.py file and run it ;)
+Buy some ghashes, set parameters in the config.py file and run trader.py ;)
 
 parameters
 ==========
@@ -15,3 +15,4 @@ parameters
 * *start_price* - the starting price (I assume it is the price you paid for ghashes)
 * *stop_loss* - how much are you willing to lose, it means sell if current price drops below `start_price*(1-stop_loss)`
 * *take_profit* - when to escape if price drops below maximum, it means sell if current price drops below max_price more then `max_price*take_profit)`
+* *debug_mode* - do not atempt to sell anything, just display info
