@@ -33,10 +33,7 @@ class CexApi:
     self.nonce = 0
 
   def get_nonce(self):
-    new_nonce = int(time.time())
-    while new_nonce <= self.nonce:
-      new_nonce += 1
-    self.nonce = new_nonce
+    self.nonce = max(int(time.time()), self.nonce+1)
     return self.nonce
 
   def set_trading_pair(self, asset, currency):
