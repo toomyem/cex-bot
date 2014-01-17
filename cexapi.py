@@ -103,12 +103,12 @@ class CexApi:
 
   def place_buy_order(self, amount, price):
     o = self.req("place_order/GHS/BTC/", True,
-      {'type': 'buy', 'amount': amount, 'price': price})
+      {'type': 'buy', 'amount': amount, 'price': round(price,8)})
     if o.has_key('error'): return {'error': o['error']}
     return _map_order(o)
 
   def place_sell_order(self, amount, price):
     o = self.req("place_order/GHS/BTC/", True,
-      {'type': 'sell', 'amount': amount, 'price': price})
+      {'type': 'sell', 'amount': amount, 'price': round(price,8)})
     if o.has_key('error'): return {'error': o['error']}
     return _map_order(o)
