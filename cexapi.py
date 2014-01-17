@@ -60,8 +60,14 @@ class CexApi:
     if extra_params: params.update(extra_params)
     params = urllib.urlencode(params)
     headers = { "User-Agent" : "bot-cex.io" }
-    req = urllib2.Request(uri, params, headers)
-    data = urllib2.urlopen(req)
+    data = None
+    while not data:
+      try:
+        req = urllib2.Request(uri, params, headers)
+        data = urllib2.urlopen(req)
+      except urllib2.HTTPError as ex:
+        print ex
+      
     if data.getcode() != 200 or data.info().gettype() != "text/json":
       resp = {'error': 'invalid response'}
     else:
