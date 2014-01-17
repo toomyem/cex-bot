@@ -7,10 +7,9 @@ secret = ""
 
 #################################################################
 # settings about trade
-stop_loss = 0.001     # how much are you willing to loose?
-take_profit = 0.02    # level to escape when price suddenly drops
-start_ghs = 1.35      # how many ghs do you want to trade
-start_price = 0.0456  # price you paid for those ghashes
-
-debug_mode = True
+ghs = 1.3814       # number of ghs to be sold on price drop
+limit = 0.04543    # limit for stop loss
+maximum = 0.4546   # top price for trailing stop loss
+delay = 10         # delay in secs 
+debug_mode = True  # in debug mode nothing will be sold!
 

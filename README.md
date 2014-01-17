@@ -11,8 +11,8 @@ parameters
 * _username_ - username from cex.io
 * _apikey_ - apikey generated on cex.io page
 * _secret_ - your secret key from cex.io page
-* *start_ghs* - the amount of ghs you own and want to be sold by bot
-* *start_price* - the starting price (I assume it is the price you paid for ghashes)
-* *stop_loss* - how much are you willing to lose, it means sell if current price drops below `start_price*(1-stop_loss)`
-* *take_profit* - when to escape if price drops below maximum, it means sell if current price drops below max_price more then `max_price*take_profit)`
+* *ghs* - the amount of ghs you want to be sold by bot
+* *limit* - the minimum price limit below which the bot will sell the ghs
+* *maximum* - price to activate trailing limit, if the price goes above maximum, the limit is also pushed up
+* *delay* - delay in seconds between steps when bot gets data from api (do not set it too low, cex.io limits are 600 queries per 10 minutes)
 * *debug_mode* - do not atempt to sell anything, just display info
