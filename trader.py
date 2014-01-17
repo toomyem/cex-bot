@@ -2,6 +2,7 @@
 import cexapi
 import config
 import time
+import notify
 
 api = cexapi.CexApi(config.username, config.apikey, config.secret)
 
@@ -13,9 +14,15 @@ def get_mean_price(orders):
   return sum(p)/len(p)
 
 def sell_ghs(amount, price):
-    print "Sell", amount, "ghs at", to8(price), "btc"
-    if not config.debug_mode:
+    if config.debug_mode:
+      msg = "You should sell %f GHS for %0.8f BTC on cex.io" % (amount, price)
+      print msg
+      if config.mail_enabled: notify.send_mail(msg)
+    else:
+      msg = "Attempting to sell %f GHS for %0.8f BTC on cex.io" % (amount, price)
+      print msg
       print api.place_sell_order(amount, price)
+      if config.mail_enabled: notify.send_mail(msg)
 
 def to8(num):
     return "%0.8f" % num
@@ -23,28 +30,30 @@ def to8(num):
 def get_ts():
     return "[" + time.strftime("%Y/%m/%d %H:%M:%S") + "]"
 
-orders = api.get_trade_hist()
-last_tid = get_last_tid(orders)
-last_price = 0
-maximum = config.maximum
-limit = config.limit
-
-while True:
-  orders = api.get_trade_hist(last_tid)
+def trailing_stop_loss(limit, maximum, delay):
+  orders = api.get_trade_hist()
   last_tid = get_last_tid(orders)
-  price = get_mean_price(orders)
-  delta = price - last_price
+  last_price = 0
 
-  if price < limit:
-    sell_ghs(config.ghs, price)
-    break
+  while True:
+    orders = api.get_trade_hist(last_tid)
+    last_tid = get_last_tid(orders)
+    price = get_mean_price(orders)
+    delta = price - last_price
 
-  if price > maximum:
-    limit += price - maximum
-    maximum = price
+    if price < limit:
+      sell_ghs(config.ghs, price)
+      break
 
-  print get_ts(), "limit:", to8(limit), "price:", to8(price), "max:", to8(maximum), "delta:", to8(delta)
+    if price > maximum:
+      limit += (price - maximum)
+      maximum = price
 
-  last_price = price
-  time.sleep(config.delay)
+    print get_ts(), "limit:", to8(limit), "price:", to8(price), "max:", to8(maximum), "delta:", to8(delta)
+
+    last_price = price
+    time.sleep(config.delay)
+
+if __name__ == '__main__':
+  trailing_stop_loss(config.limit, config.maximum, config.delay)
 
