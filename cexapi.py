@@ -30,11 +30,9 @@ class CexApi:
     self.username = username
     self.apikey = apikey
     self.secret = secret
-    self.nonce = 0
 
   def get_nonce(self):
-    self.nonce = max(int(time.time()), self.nonce+1)
-    return self.nonce
+    return int(time.time()*1000)
 
   def set_trading_pair(self, asset, currency):
     raise CexException("setting trading pair is not supported on cex.io")
@@ -90,8 +88,13 @@ class CexApi:
   def get_balance(self):
     b = self.req("balance/", True)
     print b
-    return ((float(b[self.asset]['available']), float(b[self.asset]['orders'])),
-            (float(b[self.currency]['available']), float(b[self.currency]['orders'])))
+    asset,currency = self.get_trading_pair()
+    return ((float(b[asset]['available']), float(b[asset]['orders'])),
+            (float(b[currency]['available']), float(b[currency]['orders'])))
+
+  def get_order_book(self):
+    orders = self.req("order_book/GHS/BTC/")
+    return orders
 
   def get_open_orders(self):
     orders = self.req("open_orders/GHS/BTC/", True)
