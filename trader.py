@@ -13,7 +13,7 @@ def log(msg):
   print get_ts(), msg
   if config.log_filename:
     f = open(config.log_filename, "a")
-    f.write(get_ts() + " " + msg + "\n")
+    f.write(get_ts() + " " + str(msg) + "\n")
     f.close()
 
 def get_mean_price(orders):
@@ -65,7 +65,7 @@ def trailing_stop_loss(limit, maximum, delay):
     log("limit: " + to8(limit) + " price: " + to8(price) + " max: " + to8(maximum) + " diff: " + to8(diff) + " delta: " + to8(delta))
 
     last_price = price
-    time.sleep(config.delay)
+    time.sleep(delay)
 
 if __name__ == '__main__':
   trailing_stop_loss(config.limit, config.maximum, config.delay)
