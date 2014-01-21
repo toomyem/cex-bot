@@ -31,7 +31,7 @@ def sell_ghs(amount, price):
       log(msg)
       r = api.place_sell_order(amount, price)
       log(r)
-      if config.mail_enabled: notify.send_mail(msg + "\r\n" + r)
+      if config.mail_enabled: notify.send_mail(msg + "\r\n" + str(r))
       return True
 
 def to8(num):
