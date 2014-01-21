@@ -1,4 +1,6 @@
 *.py[cod]
+config.py
+log*.txt
 
 # C extensions
 *.so
