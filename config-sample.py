@@ -21,8 +21,8 @@ window  = 120       # time window for mean price calculation
 ################################################################
 # configuraton for mail notifier
 mail_enabled = False
-mail_srv     = "smtp.gmail.com"
-mail_user    = ""
-mail_pass    = ""
-mail_to      = ""
+mail_srv     = ""  # mail server address, for example smtp.gmail.com
+mail_user    = ""  # user name on mail server
+mail_pass    = ""  # password for that user
+mail_to      = ""  # who shall receive the information
 

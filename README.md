@@ -4,7 +4,7 @@ Bot to ease the pain of speculation on CEX.io exchange.
 
 usage
 =====
-Buy some ghashes, set parameters in the config.py file and run trader.py ;)
+Buy some ghashes, rename config-sample.py to config.py, set parameters there and run trader.py ;)
 
 parameters
 ==========
