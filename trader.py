@@ -18,11 +18,13 @@ def sell_ghs(amount, price):
       msg = "You should sell %f GHS for %0.8f BTC on cex.io" % (amount, price)
       print msg
       if config.mail_enabled: notify.send_mail(msg)
+      return False
     else:
       msg = "Attempting to sell %f GHS for %0.8f BTC on cex.io" % (amount, price)
       print msg
       print api.place_sell_order(amount, price)
       if config.mail_enabled: notify.send_mail(msg)
+      return True
 
 def to8(num):
     return "%0.8f" % num
@@ -40,16 +42,18 @@ def trailing_stop_loss(limit, maximum, delay):
     last_tid = get_last_tid(orders)
     price = get_mean_price(orders)
     delta = price - last_price
+    diff = price - limit
 
     if price < limit:
-      sell_ghs(config.ghs, price)
-      break
+      print get_ts(), "price went down to:", to8(price), "limit:", to8(limit)
+      if sell_ghs(config.ghs, limit):
+        break
 
     if price > maximum:
       limit += (price - maximum)
       maximum = price
 
-    print get_ts(), "limit:", to8(limit), "price:", to8(price), "max:", to8(maximum), "delta:", to8(delta)
+    print get_ts(), "limit:", to8(limit), "price:", to8(price), "max:", to8(maximum), "diff:", to8(diff), "delta:", to8(delta)
 
     last_price = price
     time.sleep(config.delay)
