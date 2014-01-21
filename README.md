@@ -15,4 +15,5 @@ parameters
 * *limit* - the minimum price limit below which the bot will sell the ghs
 * *maximum* - price to activate trailing limit, if the price goes above maximum, the limit is also pushed up
 * *delay* - delay in seconds between steps when bot gets data from api (do not set it too low, cex.io limits are 600 queries per 10 minutes)
+* *window* - time frame in seconds for mean price calculation
 * *debug_mode* - do not atempt to sell anything, just display info

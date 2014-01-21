@@ -79,10 +79,10 @@ class CexApi:
             'high': float(t['high']),
             'time': int(t['timestamp'])}
 
-  def get_trade_hist(self, tid = 0):
-    params = {}
-    if tid > 0: params = {'since': tid}
-    hist = self.req("trade_history/GHS/BTC/", False, params)
+  def get_trade_hist(self, since = 0):
+    hist = self.req("trade_history/GHS/BTC/")
+    if since > 0:
+      hist = filter(lambda h: int(h['date']) > since, hist)
     return [_map_hist(h) for h in hist]
 
   def get_balance(self):
