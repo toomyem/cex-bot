@@ -21,6 +21,9 @@ def _map_hist(h):
             'price': float(h['price']),
             'time': int(h['date'])}
 
+def _map_book(o):
+  return {'price': float(o[0]), 'amount': float(o[1])}
+
 
 class CexApi:
 
@@ -83,18 +86,18 @@ class CexApi:
     hist = self.req("trade_history/GHS/BTC/")
     if since > 0:
       hist = filter(lambda h: int(h['date']) > since, hist)
-    return [_map_hist(h) for h in hist]
+    return sorted([_map_hist(h) for h in hist], key=lambda h: h['time'])
 
   def get_balance(self):
     b = self.req("balance/", True)
-    print b
     asset,currency = self.get_trading_pair()
     return ((float(b[asset]['available']), float(b[asset]['orders'])),
             (float(b[currency]['available']), float(b[currency]['orders'])))
 
   def get_order_book(self):
     orders = self.req("order_book/GHS/BTC/")
-    return orders
+    return {'asks':[_map_book(o) for o in orders['asks']], 
+            'bids':[_map_book(o) for o in orders['bids']]}
 
   def get_open_orders(self):
     orders = self.req("open_orders/GHS/BTC/", True)
